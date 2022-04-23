@@ -1,3 +1,5 @@
+import { isTemplateNode } from "@vue/compiler-core";
+
 const LOCAL_KEY = "todomvc";
 
 /**
@@ -24,4 +26,16 @@ export function fetch() {
  */
 export function save(todos) {
   localStorage.setItem(LOCAL_KEY, JSON.stringify(todos));
+}
+
+export function filter(todos, visibility='all') {
+  if(visibility === 'all') {
+    return todos
+  } else if(visibility === 'active') {
+    return todos.filter(item => !item.completed)
+  } else if(visibility === 'completed') {
+    return todos.filter(item => item.completed)
+  }
+
+  throw new Error("invalid visibility value");
 }

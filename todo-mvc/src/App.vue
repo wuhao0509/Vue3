@@ -18,11 +18,12 @@
         <ul class="todo-list">
           <li
             class="todo"
-            v-for="item in todoRef"
+            v-for="item in filteredTodoRef"
             :key="item.id"
+            :class="{ completed: item.completed }"
           >
             <div class="view">
-              <input class="toggle" type="checkbox" />
+              <input class="toggle" type="checkbox" v-model="item.completed"/>
               <label>{{ item.title }}</label>
               <button class="destroy"></button>
             </div>
@@ -32,15 +33,21 @@
       </section>
       <footer class="footer">
         <span class="todo-count">
-          <strong>3</strong>
-          <span>items left</span>
+          <strong>{{ remainingRef }}</strong>
+          <span>item{{remainingRef === 1 ? '' : 's'}} left</span>
         </span>
         <ul class="filters">
-          <li><a href="#/all" class="selected">All</a></li>
-          <li><a href="#/active" class="">Active</a></li>
-          <li><a href="#/completed" class="">Completed</a></li>
+          <li>
+            <a href="#/all" :class="{ selected: visibilityRef === 'all'}">All</a>
+          </li>
+          <li>
+            <a href="#/active" :class="{ selected: visibilityRef === 'active'}">Active</a>
+          </li>
+          <li>
+            <a href="#/completed" :class="{ selected: visibilityRef === 'completed'}">Completed</a>
+          </li>
         </ul>
-        <button class="clear-completed" style="display: none">
+        <button class="clear-completed" v-show="completedRef > 0">
           Clear completed
         </button>
       </footer>
@@ -52,13 +59,16 @@
 <script>
 import useNewTodo from './composition/useNewTodo'
 import useTodoList from './composition/useTodoList'
+import useFilter from './composition/useFilter'
 
 export default {
   setup() {
-       const { todoRef } = useTodoList()
+      const { todoRef } = useTodoList()
+
       return {
         todoRef,
-        ...useNewTodo(todoRef)
+        ...useNewTodo(todoRef),
+        ...useFilter(todoRef)
       }
   }
 }

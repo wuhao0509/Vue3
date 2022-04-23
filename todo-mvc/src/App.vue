@@ -8,32 +8,22 @@
           autofocus=""
           autocomplete="off"
           placeholder="What needs to be done?"
+          v-model="newTodoRef"
+          @keyup.enter="addTodo"
         />
       </header>
       <section class="main">
         <input id="toggle-all" class="toggle-all" type="checkbox" />
         <label for="toggle-all">Mark all as complete</label>
         <ul class="todo-list">
-          <li class="todo">
+          <li
+            class="todo"
+            v-for="item in todoRef"
+            :key="item.id"
+          >
             <div class="view">
               <input class="toggle" type="checkbox" />
-              <label>学习composition api</label>
-              <button class="destroy"></button>
-            </div>
-            <input class="edit" type="text" />
-          </li>
-          <li class="todo">
-            <div class="view">
-              <input class="toggle" type="checkbox" />
-              <label>投递50封简历</label>
-              <button class="destroy"></button>
-            </div>
-            <input class="edit" type="text" />
-          </li>
-          <li class="todo">
-            <div class="view">
-              <input class="toggle" type="checkbox" />
-              <label>上午10:30 参加面试</label>
+              <label>{{ item.title }}</label>
               <button class="destroy"></button>
             </div>
             <input class="edit" type="text" />
@@ -60,8 +50,17 @@
 </template>
 
 <script>
-export default {
+import useNewTodo from './composition/useNewTodo'
+import useTodoList from './composition/useTodoList'
 
+export default {
+  setup() {
+       const { todoRef } = useTodoList()
+      return {
+        todoRef,
+        ...useNewTodo(todoRef)
+      }
+  }
 }
 </script>
 

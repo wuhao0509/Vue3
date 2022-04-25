@@ -9,9 +9,18 @@ export default function useEditTodo(todoRef) {
       editingTodoRef.value = todo
     } 
 
-    const doneEdit = () => {
+    const doneEdit = (todo) => {
       // 文本修改完成后，已自动更新至localStorage，所以完成编辑直接取消输入框展示todoList即可
       editingTodoRef.value = null
+      const title = todo.title.trim()
+      if(title) {
+        todo.title = title
+      } else {
+        const index = todoRef.value.indexOf(todo)
+        if(index >= 0) {
+          todoRef.value.splice(index, 1)
+        }
+      }
     }
 
     const cancelEdit = (todo) => {
